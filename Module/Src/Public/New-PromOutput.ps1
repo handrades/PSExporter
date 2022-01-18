@@ -14,12 +14,14 @@ function New-PromOutput {
                 $Lines.Add("# TYPE $($Metric.Description.name) $($Metric.Description.type)")
             }
 
-            $strBuilder = $null
+            $strBuilder = '{'
             if($Metric.Description.labels.count -gt 0){
                 for ($i = 0; $i -lt $Metric.Description.labels.Count; $i++) {
-                    $strBuilder += "{$($Metric.Description.labels[$i])=`"$($Metric.labels[$i])`"}"
+                    $strBuilder += "$($Metric.Description.labels[$i])=`"$($Metric.labels[$i])`","
                 }
+                $strBuilder = $strBuilder.Substring(0,$strBuilder.Length - 1)
             }
+            $strBuilder += '}'
             $Lines.Add("$($Metric.Description.name)$strBuilder $($Metric.type)")
         }
         $Lines -join "`n"
